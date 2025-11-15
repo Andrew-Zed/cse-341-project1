@@ -37,7 +37,68 @@ const getSingle = async (req, res) => {
     }
 };
 
+const createUser = async (req, res) => {
+    const user = {
+        firstName: req.body.firstName,
+        lastName: req.body.lastName,
+        email: req.body.email,
+        username: req.body.username,
+        phone: req.body.phone
+    };
+    const response = await mongodb.getDatabase().collection('users').insertOne(user);
+    if (response.acknowledged) {
+        res.status(204).send();
+    } else {
+        res.status(500).json(response.error || 'Some error occured while creating user.');
+    }
+};
+
+const updateUser = async (req, res) => {
+    const userId = new ObjectId(req.params.id)
+    const user = {
+        firstName: req.body.firstName,
+        lastName: req.body.lastName,
+        email: req.body.email,
+        username: req.body.username,
+        phone: req.body.phone
+    };
+    const response = await mongodb.getDatabase().collection('users').replaceOne({ _id: userId }, user);
+    if (response.modifiedCount > 0) {
+        res.status(204).send();
+    } else {
+        res.status(500).json(response.error || 'Some error occured while updating user.');
+    }
+};
+
+const deleteUser = async (req, res) => {
+    try {
+        const userId = new ObjectId(req.params.id);
+        console.log('Deleting user with _id:', userId);
+
+        const response = await mongodb
+            .getDatabase()
+            .collection('users')
+            .deleteOne({ _id: userId });
+
+        console.log('MongoDB deleteOne response:', response);
+
+        if (response.deletedCount > 0) {
+            console.log('User deleted successfully.');
+            res.status(204).send();
+        } else {
+            console.warn('No user found with this ID.');
+            res.status(500).json('Some error occurred while deleting the user.');
+        }
+    } catch (error) {
+        console.error('Error deleting user:', error);
+        res.status(500).json({ message: 'Error deleting user', error: error.message });
+    }
+};
+
 module.exports = {
     getAll,
-    getSingle
+    getSingle,
+    createUser,
+    updateUser,
+    deleteUser
 }
