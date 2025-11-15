@@ -63,10 +63,10 @@
                 "email": {
                   "example": "any"
                 },
-                "username": {
+                "favoriteColor": {
                   "example": "any"
                 },
-                "phone": {
+                "birthday": {
                   "example": "any"
                 }
               }
@@ -139,10 +139,10 @@
                 "email": {
                   "example": "any"
                 },
-                "username": {
+                "favoriteColor": {
                   "example": "any"
                 },
-                "phone": {
+                "birthday": {
                   "example": "any"
                 }
               }
