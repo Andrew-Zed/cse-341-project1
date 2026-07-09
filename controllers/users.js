@@ -27,34 +27,6 @@ const getSingle = async (req, res) => {
     res.status(200).json(user);
 };
 
-
-
-// const getAllUsers = async (req, res) => {
-//     try {
-//         const db = mongodb.getDatabase();
-//         const users = await db.db().collection('users').find().toArray();
-//         res.status(200).json(users);
-//     } catch (err) {
-//         console.error('Error fetching users:', err);
-//         res.status(500).json({ error: 'Failed to fetch users' });
-//     }
-// };
-
-// const getUserById = async (req, res) => {
-//     const userId = req.params.id;
-//     try {
-//         const db = mongodb.getDatabase();
-//         const user = await db.db().collection('users').findOne({ _id: new objectId(userId) });
-//         if (!user) {
-//             return res.status(404).json({ error: 'User not found' });
-//         }
-//         res.status(200).json(user);
-//     } catch (err) {
-//         console.error('Error fetching user by ID:', err);
-//         res.status(500).json({ error: 'Failed to fetch user' });
-//     }
-// };
-
 module.exports = {
     getAll,
     getSingle,
