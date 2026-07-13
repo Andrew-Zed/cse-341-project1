@@ -1,0 +1,35 @@
+// LOCALHOST 
+### GET ALL USERS
+GET http://localhost:3000/users
+
+#### GET SINGLE USER
+GET http://localhost:3000/users/690fac489bfc1acd2599f3b6
+
+#### CREATE USER
+POST http://localhost:3000/users HTTP/1.1
+Content-Type: application/json
+
+{
+    "firstName": "Michael",
+    "lastName": "Adeyemi",
+    "email": "michael.adeyemi@gmail.com",
+    "favoriteColor": "blue",
+    "birthday": "1st January 1990"
+}
+
+#### UPDATE USER
+PUT http://localhost:3000/users/6a545a4340fcc03d3123e3d4 HTTP/1.1
+Content-Type: application/json  
+
+{
+    "firstName": "Michael",
+    "lastName": "Adeyemi",
+    "email": "michael.adeyemi@yahoomail.com",
+    "favoriteColor": "blue",
+    "birthday": "1st January 1990"
+}  
+
+
+
+### DELETE USER
+DELETE http://localhost:3000/users/690fabf29bfc1acd2599f3ae
