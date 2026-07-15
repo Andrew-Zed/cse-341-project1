@@ -2,7 +2,7 @@ const mongodb= require('../data/database');
 const objectId = require('mongodb').ObjectId;
 
 const getAll = async (req, res) => {
-
+    //#swagger.tags = ['Users']
     const result = await mongodb.getDatabase().db().collection('users').find();
     result.toArray().then((users) => {
         res.setHeader('Content-Type', 'application/json');
@@ -15,6 +15,7 @@ const getAll = async (req, res) => {
 };
 
 const getSingle = async (req, res) => {
+    //#swagger.tags = ['Users']
     const userId = req.params.id;
     if (!objectId.isValid(userId)) {
         return res.status(400).json({ error: 'Invalid user id' });
@@ -28,6 +29,7 @@ const getSingle = async (req, res) => {
 };
 
 const createUser = async (req, res) => {
+    //#swagger.tags = ['Users']
     const { firstName, lastName, email, favoriteColor, birthday } = req.body;
 
     if (!firstName || !lastName || !email) {
@@ -46,6 +48,7 @@ const createUser = async (req, res) => {
 };
 
 const updateUser = async (req, res) => {
+    //#swagger.tags = ['Users']
     const userId = req.params.id;
     if (!objectId.isValid(userId)) {
         return res.status(400).json({ error: 'Invalid user id' });
