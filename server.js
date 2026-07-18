@@ -21,6 +21,18 @@ app.use((req, res, next) => {
 
 app.use('/', require('./routes'));
 
+app.use((req, res) => {
+    res.status(404).json({ error: 'Route not found' });
+});
+
+app.use((err, req, res, next) => {
+    console.error(err);
+    if (err.type === 'entity.parse.failed') {
+        return res.status(400).json({ error: 'Invalid JSON in request body' });
+    }
+    res.status(500).json({ error: 'Internal server error' });
+});
+
 mongodb.initDb((err) => {
     if (err) {
         console.error('Failed to connect to the database:', err);

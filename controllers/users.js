@@ -1,91 +1,75 @@
-const mongodb= require('../data/database');
-const objectId = require('mongodb').ObjectId;
+const mongodb = require('../data/database');
+const ObjectId = require('mongodb').ObjectId;
 
-const getAll = async (req, res) => {
+const getAll = async (req, res, next) => {
     //#swagger.tags = ['Users']
-    const result = await mongodb.getDatabase().db().collection('users').find();
-    result.toArray().then((users) => {
-        res.setHeader('Content-Type', 'application/json');
+    try {
+        const users = await mongodb.getDatabase().db().collection('users').find().toArray();
         res.status(200).json(users);
-    }).catch((err) => {
-        console.error('Error fetching users:', err);
-        res.status(500).json({ error: 'Failed to fetch users' });
-    });
-
+    } catch (err) {
+        next(err);
+    }
 };
 
-const getSingle = async (req, res) => {
+const getSingle = async (req, res, next) => {
     //#swagger.tags = ['Users']
-    const userId = req.params.id;
-    if (!objectId.isValid(userId)) {
-        return res.status(400).json({ error: 'Invalid user id' });
+    try {
+        const user = await mongodb.getDatabase().db().collection('users').findOne({ _id: new ObjectId(req.params.id) });
+        if (!user) {
+            return res.status(404).json({ error: 'User not found' });
+        }
+        res.status(200).json(user);
+    } catch (err) {
+        next(err);
     }
-    const user = await mongodb.getDatabase().db().collection('users').findOne({ _id: new objectId(userId) });
-    if (!user) {
-        return res.status(404).json({ error: 'User not found' });
-    }
-    res.setHeader('Content-Type', 'application/json');
-    res.status(200).json(user);
 };
 
-const createUser = async (req, res) => {
+const createUser = async (req, res, next) => {
     //#swagger.tags = ['Users']
-    const { firstName, lastName, email, favoriteColor, birthday } = req.body;
+    try {
+        const { firstName, lastName, email, favoriteColor, birthday } = req.body;
+        const user = { firstName, lastName, email, favoriteColor, birthday };
+        const result = await mongodb.getDatabase().db().collection('users').insertOne(user);
 
-    if (!firstName || !lastName || !email) {
-        return res.status(400).json({ error: 'firstName, lastName, and email are required' });
-    }
-
-    const user = { firstName, lastName, email, favoriteColor, birthday };
-    const result = await mongodb.getDatabase().db().collection('users').insertOne(user);
-
-    res.setHeader('Content-Type', 'application/json');
-    if (result.acknowledged) {
+        if (!result.acknowledged) {
+            return res.status(500).json({ error: 'Failed to create user' });
+        }
         res.status(201).json({ _id: result.insertedId, ...user });
-    } else {
-        res.status(500).json({ error: 'Failed to create user' });
+    } catch (err) {
+        next(err);
     }
 };
 
-const updateUser = async (req, res) => {
+const updateUser = async (req, res, next) => {
     //#swagger.tags = ['Users']
-    const userId = req.params.id;
-    if (!objectId.isValid(userId)) {
-        return res.status(400).json({ error: 'Invalid user id' });
+    try {
+        const { firstName, lastName, email, favoriteColor, birthday } = req.body;
+        const result = await mongodb.getDatabase().db().collection('users').updateOne(
+            { _id: new ObjectId(req.params.id) },
+            { $set: { firstName, lastName, email, favoriteColor, birthday } }
+        );
+
+        if (result.matchedCount === 0) {
+            return res.status(404).json({ error: 'User not found' });
+        }
+        res.status(200).json({ message: 'User updated successfully' });
+    } catch (err) {
+        next(err);
     }
-
-    const { firstName, lastName, email, favoriteColor, birthday } = req.body;
-    if (!firstName || !lastName || !email) {
-        return res.status(400).json({ error: 'firstName, lastName, and email are required' });
-    }
-
-    const result = await mongodb.getDatabase().db().collection('users').updateOne(
-        { _id: new objectId(userId) },
-        { $set: { firstName, lastName, email, favoriteColor, birthday } }
-    );
-
-    if (result.matchedCount === 0) {
-        return res.status(404).json({ error: 'User not found' });
-    }
-
-    res.setHeader('Content-Type', 'application/json');
-    res.status(200).json({ message: 'User updated successfully' });
 };
 
-const deleteUser = async (req, res) => {
-    const userId = req.params.id;
-    if (!objectId.isValid(userId)) {
-        return res.status(400).json({ error: 'Invalid user id' });
+const deleteUser = async (req, res, next) => {
+    //#swagger.tags = ['Users']
+    try {
+        const result = await mongodb.getDatabase().db().collection('users').deleteOne({ _id: new ObjectId(req.params.id) });
+
+        if (result.deletedCount === 0) {
+            return res.status(404).json({ error: 'User not found' });
+        }
+        res.status(200).json({ message: 'User deleted successfully' });
+    } catch (err) {
+        next(err);
     }
-
-    const result = await mongodb.getDatabase().db().collection('users').deleteOne({ _id: new objectId(userId) });
-
-    if (result.deletedCount === 0) {
-        return res.status(404).json({ error: 'User not found' });
-    }
-
-    res.setHeader('Content-Type', 'application/json');
-    res.status(200).json({ message: 'User deleted successfully' });
 };
 
 module.exports = {

@@ -6,9 +6,9 @@ const doc = {
     description: 'API documentation for CSE 341 Project 1',
     version: '1.0.0',
   },
-  host: 'localhost:3000',
+  host: process.env.SWAGGER_HOST || 'cse-341-project1-ilj5.onrender.com',
   basePath: '/',
-  schemes: ['http', 'https'],
+  schemes: ['https'],
   consumes: ['application/json'],
   produces: ['application/json'],
   tags: [

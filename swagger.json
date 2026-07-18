@@ -25,9 +25,6 @@
   "paths": {
     "/": {
       "get": {
-        "tags": [
-          "Hello World"
-        ],
         "description": "",
         "responses": {
           "200": {
@@ -42,15 +39,9 @@
           "Users"
         ],
         "description": "",
-        "produces": [
-          "application/json"
-        ],
         "responses": {
           "200": {
             "description": "OK"
-          },
-          "500": {
-            "description": "Internal Server Error"
           }
         }
       },
@@ -59,9 +50,6 @@
           "Users"
         ],
         "description": "",
-        "produces": [
-          "application/json"
-        ],
         "parameters": [
           {
             "name": "body",
@@ -107,9 +95,6 @@
           "Users"
         ],
         "description": "",
-        "produces": [
-          "application/json"
-        ],
         "parameters": [
           {
             "name": "id",
@@ -135,9 +120,6 @@
           "Users"
         ],
         "description": "",
-        "produces": [
-          "application/json"
-        ],
         "parameters": [
           {
             "name": "id",
@@ -183,10 +165,10 @@
         }
       },
       "delete": {
-        "description": "",
-        "produces": [
-          "application/json"
+        "tags": [
+          "Users"
         ],
+        "description": "",
         "parameters": [
           {
             "name": "id",
