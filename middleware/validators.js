@@ -7,7 +7,8 @@ const contactValidationRules = [
         .isLength({ min: 3 }).withMessage('lastName must be at least 3 characters long'),
     body('email').trim().notEmpty().withMessage('email is required').isEmail().withMessage('email must be a valid email address'),
     body('favoriteColor').trim().notEmpty().withMessage('favoriteColor is required').isString(),
-    body('birthday').trim().notEmpty().withMessage('birthday is required'),
+    body('birthday').trim().notEmpty().withMessage('birthday is required')
+        .custom((value) => !isNaN(Date.parse(value))).withMessage('birthday must be a valid date'),
 ];
 
 const idValidationRule = [
